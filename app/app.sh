@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 subcommand="${1:-}"
 
 case "$subcommand" in
-    system)
+    system-info)
         # Run system-info logic
         # Either:
         #   - call a function: do_system_info
