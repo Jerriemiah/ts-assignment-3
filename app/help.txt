@@ -1,0 +1,106 @@
+
+
+## DIAGNOSTIC CLI
+
+A Dockerized diagnostic tool for basic system, network,
+and disk checks.
+
+USAGE
+  docker run --rm diagnostic-tool <command> [args]
+  docker compose run --rm diagnostic <command> [args]
+
+COMMANDS
+  help                         Show help
+  system                       Display system information
+  network <host> [port]        Check host/network connectivity
+  disk [threshold] [path]      Display or validate disk usage
+
+SYSTEM
+  Show:
+    hostname, current user, kernel version,
+    uptime, memory and CPU information.
+
+  Usage:
+    system
+
+  Exit codes:
+    0 = success
+    1 = runtime error
+    2 = invalid input
+
+NETWORK
+  Usage:
+    network <host> [port]
+
+  Parameters:
+    host    Hostname or IP address (required)
+    port    TCP port 1-65535 (optional)
+
+  Examples:
+    network google.com
+    network 8.8.8.8
+    network google.com 443
+
+  Performs:
+    - Host validation
+    - DNS resolution
+    - Connectivity test
+    - Local interface display
+    - TCP port check (if port supplied)
+
+  Exit codes:
+    0 = checks succeeded
+    1 = connectivity failure
+    2 = invalid input
+
+DISK
+  Usage:
+    disk
+    disk <threshold>
+    disk <threshold> <path>
+
+  Parameters:
+    threshold   Integer 1-100
+    path        Filesystem path (default: /)
+
+  Examples:
+    disk
+    disk 80
+    disk 80 /var
+
+  Behavior:
+    Without threshold:
+      Display disk usage information.
+
+    With threshold:
+      Return failure if usage >= threshold.
+
+  Exit codes:
+    0 = usage below threshold / info displayed
+    1 = threshold exceeded or runtime error
+    2 = invalid input
+
+COMMON ERRORS
+  no subcommand provided
+      Use: help
+
+  unknown subcommand
+      Valid: help, system, network, disk
+
+  network requires a host
+      Example: network google.com
+
+  threshold must be 1-100
+  port must be 1-65535
+
+  Invalid commands or inputs return exit code 2.
+
+QUICK EXAMPLES
+  help
+  system
+  network google.com
+  network google.com 443
+  disk
+  disk 80
+  disk 80 /var
+

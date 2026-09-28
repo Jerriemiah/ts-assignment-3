@@ -1,0 +1,8 @@
+services:
+  diagnostic-tool:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: diagnostic-tool:latest
+    volumes:
+      - ./logs:/app/logs

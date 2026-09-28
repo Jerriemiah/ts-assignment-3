@@ -1,0 +1,28 @@
+Resolved lookup for localhost: 127.0.0.1
+
+_____________Checking network connection to localhost ...____________
+Pinging localhost ...
+Ping result: Success
+Network connection to localhost is successful.
+
+__________Network Interface Information:__________
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.25.65.151  netmask 255.255.240.0  broadcast 172.25.79.255
+        inet6 fe80::215:5dff:fe53:33ec  prefixlen 64  scopeid 0x20<link>
+        ether 00:15:5d:53:33:ec  txqueuelen 1000  (Ethernet)
+        RX packets 21650  bytes 11829279 (11.8 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 15698  bytes 13663453 (13.6 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 85269  bytes 110697883 (110.6 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 85269  bytes 110697883 (110.6 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+Ping localhost (127.0.0.1):
+Success
+

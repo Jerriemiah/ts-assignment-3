@@ -1,0 +1,30 @@
+Resolving hostname google.com to IP address: 142.251.209.78
+__________________________________________________________
+Resolved lookup for google.com: 142.251.209.78
+
+_____________Checking network connection to google.com ...____________
+Pinging google.com ...
+Ping result: Success
+Network connection to google.com is successful.
+
+__________Network Interface Information:__________
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.25.65.151  netmask 255.255.240.0  broadcast 172.25.79.255
+        inet6 fe80::215:5dff:fe53:33ec  prefixlen 64  scopeid 0x20<link>
+        ether 00:15:5d:53:33:ec  txqueuelen 1000  (Ethernet)
+        RX packets 17556  bytes 11014187 (11.0 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 12118  bytes 8160958 (8.1 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 73884  bytes 107229814 (107.2 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 73884  bytes 107229814 (107.2 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+Ping localhost (127.0.0.1):
+Success
+

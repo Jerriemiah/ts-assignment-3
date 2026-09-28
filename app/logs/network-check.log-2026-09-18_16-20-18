@@ -1,0 +1,32 @@
+Resolving hostname ebay.com to IP address: 23.196.227.101
+23.196.227.100
+__________________________________________________________
+Resolved lookup for ebay.com: 23.196.227.101
+23.196.227.100
+
+_____________Checking network connection to ebay.com ...____________
+Pinging ebay.com ...
+Ping result: Success
+Network connection to ebay.com is successful.
+
+__________Network Interface Information:__________
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.25.65.151  netmask 255.255.240.0  broadcast 172.25.79.255
+        inet6 fe80::215:5dff:fe75:f9f4  prefixlen 64  scopeid 0x20<link>
+        ether 00:15:5d:75:f9:f4  txqueuelen 1000  (Ethernet)
+        RX packets 15092  bytes 7084841 (7.0 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 11838  bytes 13526349 (13.5 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 60674  bytes 47127855 (47.1 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 60674  bytes 47127855 (47.1 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+Ping localhost (127.0.0.1):
+Success
+

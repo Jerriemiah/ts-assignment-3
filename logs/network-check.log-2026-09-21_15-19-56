@@ -1,0 +1,27 @@
+Resolved lookup for localhost: ::1
+
+_____________Checking network connection to localhost ...____________
+Pinging localhost ...
+Ping result: Success
+Network connection to localhost is successful.
+
+__________Network Interface Information:__________
+eth0      Link encap:Ethernet  HWaddr BA:9B:47:CC:42:26  
+          inet addr:172.20.0.2  Bcast:172.20.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:2 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:820 (820.0 B)  TX bytes:84 (84.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:4 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:416 (416.0 B)  TX bytes:416 (416.0 B)
+Ping localhost (127.0.0.1):
+Success
+
