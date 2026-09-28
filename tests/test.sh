@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -u
 
-IMAGE="app.sh"
+IMAGE="devops-tool"
 FAILED=0
 THRESHOLD=10
 
