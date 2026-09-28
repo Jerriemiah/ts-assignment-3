@@ -60,8 +60,8 @@ if [[ -x ./app/app.sh ]]; then
     ./app/app.sh help > /tmp/assignment3-app.log 2>&1
     [[ $? -eq 0 ]] && pass "app.sh help succeeds" || fail "app.sh help failed"
 
-    ./app/app.sh system-info > /tmp/assignment3-app.log 2>&1
-    [[ $? -eq 0 ]] && pass "app.sh system-info succeeds" || fail "app.sh system-info failed"
+    ./app/app.sh system > /tmp/assignment3-app.log 2>&1
+    [[ $? -eq 0 ]] && pass "app.sh system succeeds" || fail "app.sh system failed"
 
     ./app/app.sh > /dev/null 2>&1
     [[ $? -eq 2 ]] && pass "app.sh rejects missing command with exit code 2" || fail "app.sh should return 2 for missing command"
@@ -99,8 +99,8 @@ if command -v docker > /dev/null 2>&1; then
     docker run --rm "$IMAGE" help > /tmp/assignment3-docker.log 2>&1
     [[ $? -eq 0 ]] && pass "Docker help smoke test passes" || fail "Docker help smoke test failed"
 
-    docker run --rm "$IMAGE" system-info > /tmp/assignment3-docker.log 2>&1
-    [[ $? -eq 0 ]] && pass "Docker system-info smoke test passes" || fail "Docker system-info smoke test failed"
+    docker run --rm "$IMAGE" system > /tmp/assignment3-docker.log 2>&1
+    [[ $? -eq 0 ]] && pass "Docker system smoke test passes" || fail "Docker system smoke test failed"
 
     docker run --rm "$IMAGE" invalid-command > /tmp/assignment3-docker.log 2>&1
     [[ $? -ne 0 ]] && pass "Docker invalid command returns non-zero" || fail "Docker invalid command should fail"
