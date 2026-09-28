@@ -15,99 +15,128 @@ fail() {
 }
 
 echo "======================================"
-echo "Assignment 2 - Local Grader"
-echo "Dockerized Diagnostic CLI"
+echo "Assignment 3 - Local Grader"
+echo "GitHub Actions / Docker / Bash"
 echo "======================================"
 echo
 
 # Required files
-for f in README.md Dockerfile compose.yaml .dockerignore app/diagnostic.sh test.sh; do
+for f in README.md app/app.sh scripts/lint.sh scripts/build.sh tests/test.sh Dockerfile compose.yaml .dockerignore .github/workflows/ci.yml; do
     [[ -f "$f" ]] && pass "Required file exists: $f" || fail "Missing required file: $f"
 done
 
-# Bash syntax checks
-for f in app/*.sh test.sh; do
+# Bash syntax
+for f in app/*.sh scripts/*.sh tests/*.sh; do
     [[ -f "$f" ]] || continue
     bash -n "$f" > /dev/null 2>&1 && pass "Bash syntax: $f" || fail "Bash syntax error: $f"
 done
 
-# Executable check
-[[ -x app/diagnostic.sh ]] && pass "diagnostic.sh is executable" || fail "app/diagnostic.sh is not executable"
+# Executable checks
+for f in app/app.sh scripts/lint.sh scripts/build.sh tests/test.sh; do
+    [[ -x "$f" ]] && pass "Executable: $f" || fail "Not executable: $f"
+done
 
-# Docker availability
-if ! command -v docker > /dev/null 2>&1; then
-    echo
-    echo "ERROR: Docker is required to grade Assignment 2."
-    exit 2
+# Workflow checks
+WORKFLOW=".github/workflows/ci.yml"
+if [[ -f "$WORKFLOW" ]]; then
+    grep -Eq 'push:' "$WORKFLOW" && pass "Workflow triggers on push" || fail "Workflow missing push trigger"
+    grep -Eq 'pull_request:' "$WORKFLOW" && pass "Workflow triggers on pull_request" || fail "Workflow missing pull_request trigger"
+
+    grep -Eq 'validate:' "$WORKFLOW" && pass "Workflow has validate job" || fail "Workflow missing validate job"
+    grep -Eq 'test:' "$WORKFLOW" && pass "Workflow has test job" || fail "Workflow missing test job"
+    grep -Eq 'docker:' "$WORKFLOW" && pass "Workflow has docker job" || fail "Workflow missing docker job"
+
+    grep -A12 -E '^[[:space:]]*test:' "$WORKFLOW" | grep -Eq 'needs:[[:space:]]*validate' && \
+        pass "Test job depends on validate" || \
+        fail "Test job should use needs: validate"
+
+    grep -A12 -E '^[[:space:]]*docker:' "$WORKFLOW" | grep -Eq 'needs:[[:space:]]*test' && \
+        pass "Docker job depends on test" || \
+        fail "Docker job should use needs: test"
 fi
 
-# Dockerfile basic checks
-grep -Eq '^[[:space:]]*FROM[[:space:]]+' Dockerfile && pass "Dockerfile has FROM" || fail "Dockerfile has no FROM"
-grep -Eq 'ENTRYPOINT|CMD' Dockerfile && pass "Dockerfile defines ENTRYPOINT or CMD" || fail "Dockerfile has neither ENTRYPOINT nor CMD"
+# Application validation
+if [[ -x ./app/app.sh ]]; then
+    ./app/app.sh help > /tmp/assignment3-app.log 2>&1
+    [[ $? -eq 0 ]] && pass "app.sh help succeeds" || fail "app.sh help failed"
 
-# .dockerignore
-grep -Eq '^\.git/?$|^\.git$' .dockerignore && pass ".dockerignore excludes .git" || fail ".dockerignore should exclude .git"
+    ./app/app.sh system-info > /tmp/assignment3-app.log 2>&1
+    [[ $? -eq 0 ]] && pass "app.sh system-info succeeds" || fail "app.sh system-info failed"
 
-# Build
-IMAGE="student-diagnostic-grader"
-if docker build -t "$IMAGE" . > /tmp/assignment2-docker-build.log 2>&1; then
-    pass "Docker image builds successfully"
-else
-    fail "Docker image failed to build"
-    cat /tmp/assignment2-docker-build.log
+    ./app/app.sh > /dev/null 2>&1
+    [[ $? -eq 2 ]] && pass "app.sh rejects missing command with exit code 2" || fail "app.sh should return 2 for missing command"
+
+    ./app/app.sh check-port localhost abc > /dev/null 2>&1
+    [[ $? -eq 2 ]] && pass "app.sh rejects non-numeric port" || fail "app.sh should reject non-numeric port with exit code 2"
+
+    ./app/app.sh check-port localhost 0 > /dev/null 2>&1
+    [[ $? -eq 2 ]] && pass "app.sh rejects port 0" || fail "app.sh should reject port 0"
+
+    ./app/app.sh check-port localhost 65536 > /dev/null 2>&1
+    [[ $? -eq 2 ]] && pass "app.sh rejects port 65536" || fail "app.sh should reject port 65536"
 fi
 
-run_test() {
-    name="$1"
-    shift
-    if "$@" > /tmp/assignment2-test.log 2>&1; then
-        pass "$name"
-        return 0
+# Lint script
+if [[ -x ./scripts/lint.sh ]]; then
+    if ./scripts/lint.sh > /tmp/assignment3-lint.log 2>&1; then
+        pass "scripts/lint.sh passes"
     else
-        fail "$name"
-        cat /tmp/assignment2-test.log
-        return 1
+        fail "scripts/lint.sh fails"
+        cat /tmp/assignment3-lint.log
     fi
-}
-
-# Functional tests
-run_test "docker help command works" docker run --rm "$IMAGE" help
-run_test "docker system command works" docker run --rm "$IMAGE" system
-run_test "docker disk command works" docker run --rm "$IMAGE" disk
-
-# Invalid command must fail
-docker run --rm "$IMAGE" invalid-command > /tmp/assignment2-test.log 2>&1
-rc=$?
-if [[ $rc -ne 0 ]]; then
-    pass "Invalid command returns non-zero"
-else
-    fail "Invalid command should return non-zero"
 fi
 
-# Compose file validation
-if docker compose config > /tmp/assignment2-compose.log 2>&1; then
-    pass "Docker Compose configuration is valid"
+# Docker
+if command -v docker > /dev/null 2>&1; then
+    IMAGE="student-devops-ci-grader"
+    if docker build -t "$IMAGE" . > /tmp/assignment3-docker-build.log 2>&1; then
+        pass "Docker image builds successfully"
+    else
+        fail "Docker image failed to build"
+        cat /tmp/assignment3-docker-build.log
+    fi
+
+    docker run --rm "$IMAGE" help > /tmp/assignment3-docker.log 2>&1
+    [[ $? -eq 0 ]] && pass "Docker help smoke test passes" || fail "Docker help smoke test failed"
+
+    docker run --rm "$IMAGE" system-info > /tmp/assignment3-docker.log 2>&1
+    [[ $? -eq 0 ]] && pass "Docker system-info smoke test passes" || fail "Docker system-info smoke test failed"
+
+    docker run --rm "$IMAGE" invalid-command > /tmp/assignment3-docker.log 2>&1
+    [[ $? -ne 0 ]] && pass "Docker invalid command returns non-zero" || fail "Docker invalid command should fail"
+
+    docker image rm "$IMAGE" > /dev/null 2>&1 || true
 else
-    fail "Docker Compose configuration is invalid"
-    cat /tmp/assignment2-compose.log
+    echo "ERROR: Docker is required for Assignment 3 Docker checks."
+    FAIL=$((FAIL + 1))
 fi
 
-# Student test suite
-if [[ -x ./test.sh ]]; then
-    if ./test.sh > /tmp/assignment2-student-tests.log 2>&1; then
-        pass "Student test.sh passes"
+# Student tests
+if [[ -x ./tests/test.sh ]]; then
+    if ./tests/test.sh > /tmp/assignment3-tests.log 2>&1; then
+        pass "Student test suite passes"
     else
-        fail "Student test.sh fails"
-        cat /tmp/assignment2-student-tests.log
+        fail "Student test suite fails"
+        cat /tmp/assignment3-tests.log
     fi
 else
-    echo "WARN: test.sh is not executable; running with bash"
-    if bash ./test.sh > /tmp/assignment2-student-tests.log 2>&1; then
-        pass "Student test.sh passes"
+    if bash ./tests/test.sh > /tmp/assignment3-tests.log 2>&1; then
+        pass "Student test suite passes"
     else
-        fail "Student test.sh fails"
-        cat /tmp/assignment2-student-tests.log
+        fail "Student test suite fails"
+        cat /tmp/assignment3-tests.log
     fi
+fi
+
+# Git checks
+if command -v git > /dev/null 2>&1 && git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    commits=$(git rev-list --count HEAD 2>/dev/null || echo 0)
+    [[ "$commits" -ge 5 ]] && pass "Git has at least 5 commits" || echo "WARN: fewer than 5 commits; inspect manually"
+
+    branch_count=$(git for-each-ref --format='%(refname:short)' refs/heads 2>/dev/null | grep -vE '^(main|master)$' | wc -l | tr -d ' ')
+    [[ "$branch_count" -ge 1 ]] && pass "Feature/non-main branch exists locally" || echo "WARN: no local feature branch found; inspect Git history manually"
+else
+    echo "WARN: Git checks skipped"
 fi
 
 echo
@@ -116,5 +145,4 @@ echo "Passed: $PASS"
 echo "Failed: $FAIL"
 echo "======================================"
 
-docker image rm "$IMAGE" > /dev/null 2>&1 || true
 [[ $FAIL -eq 0 ]]

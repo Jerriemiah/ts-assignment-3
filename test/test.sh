@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -u
 
-IMAGE="diagnostic-tool"
+IMAGE="app.sh"
 FAILED=0
 THRESHOLD=10
 
