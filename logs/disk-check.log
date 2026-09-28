@@ -3,3 +3,21 @@ ______________________________
 Disk Usage percentage
 Current disk usage of filesystem: 2%
 Info: Current disk usage is below the provided threshold
+===== Disk check started: 2026-09-28 14:11:12 =====
+______________________________
+Disk Usage percentage
+Current disk usage of filesystem: 2%
+Info: Current disk usage is below the provided threshold
+===== Disk check started: 2026-09-28 14:11:28 =====
+______________________________
+Disk Usage percentage
+===== Disk check started: 2026-09-28 14:11:35 =====
+______________________________
+Disk Usage percentage
+Current disk usage of filesystem: 2%
+Info: Current disk usage is equal to the provided threshold
+===== Disk check started: 2026-09-28 14:11:43 =====
+______________________________
+Disk Usage percentage
+Current disk usage of filesystem: 2%
+Info: Current disk usage is above the provided threshold

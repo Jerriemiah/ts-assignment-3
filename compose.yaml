@@ -1,8 +1,8 @@
 services:
-  diagnostic-tool:
+  devops-tool:
     build:
       context: .
       dockerfile: Dockerfile
-    image: diagnostic-tool:latest
+    image: devops-tool:latest
     volumes:
       - ./logs:/app/logs
